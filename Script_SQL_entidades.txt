@@ -1,0 +1,66 @@
+CREATE TABLE dim_jugador (
+    player_id     INT PRIMARY KEY,
+    name          VARCHAR(100) NOT NULL UNIQUE,
+    dominant_hand VARCHAR(50) NOT NULL,
+    switch_hitter VARCHAR(50) NOT NULL,
+    birth_country VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE dim_posicion (
+    position_id       INT PRIMARY KEY,
+    position_code     VARCHAR(50) NOT NULL,
+    position_name     VARCHAR(50) NOT NULL,
+    position_category VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE dim_temporada (
+    season_id INT PRIMARY KEY,
+    year      INT NOT NULL,
+    era       VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE fact_batting (
+    batting_id          INT PRIMARY KEY,
+    player_id           INT NOT NULL,
+    position_id         INT NOT NULL,
+    season_id           INT NOT NULL,
+    age                 INT NOT NULL,
+    age_category        VARCHAR(50) NOT NULL,
+    games               INT NOT NULL,
+    plate_appearances   INT NOT NULL,
+    at_bats             INT NOT NULL,
+    runs                INT NOT NULL,
+    hits                INT NOT NULL,
+    doubles             INT NOT NULL,
+    triples             INT NOT NULL,
+    home_runs           INT NOT NULL,
+    runs_batted_in      INT NOT NULL,
+    stolen_bases        INT NOT NULL,
+    caught_stealing     INT NOT NULL,
+    base_on_balls       INT NOT NULL,
+    strikeouts          INT NOT NULL,
+    batting_average     FLOAT NOT NULL,
+    on_base_percentage  FLOAT NOT NULL,
+    slugging_percentage FLOAT NOT NULL,
+    ops                 FLOAT NOT NULL,
+    ops_plus            INT NOT NULL,
+    total_bases         INT NOT NULL,
+    times_hit_by_pitch  INT NOT NULL,
+    sacrifice_hits      INT NOT NULL,
+    sacrifice_flies     INT NOT NULL,
+    intentional_walks   INT NOT NULL,
+    double_plays        INT NOT NULL,
+    FOREIGN KEY (player_id)   REFERENCES dim_jugador(player_id),
+    FOREIGN KEY (position_id) REFERENCES dim_posicion(position_id),
+    FOREIGN KEY (season_id)   REFERENCES dim_temporada(season_id)
+);
+
+CREATE TABLE fact_contrato (
+    contract_id   INT PRIMARY KEY,
+    player_id     INT NOT NULL,
+    season_id     INT NOT NULL,
+    salary        FLOAT NOT NULL,
+    contract_type VARCHAR(50) NOT NULL,
+    FOREIGN KEY (player_id) REFERENCES dim_jugador(player_id),
+    FOREIGN KEY (season_id) REFERENCES dim_temporada(season_id)
+);
